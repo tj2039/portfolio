@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="admin">
+	<!-- 관리자 로그인 체크 -->
+	<select id="adminCheck" parameterType="hashMap" resultType="int">
+		<![CDATA[
+			select count(*) from admin where uId = #{uId}
+		]]>
+	</select>
+	
+	<!-- 관리자 로그인 처리 -->
+	<select id="adminLogin" parameterType="hashMap" resultType="int">
+		<![CDATA[
+			select count(*) from admin where uId = #{uId} and uPw = #{uPw}
+		]]>
+	</select>
+	
+	<!-- 관리자 정보 가져오기 -->
+	<select id="adminDetail" parameterType="hashMap" resultType="hashMap">
+		<![CDATA[
+			select * from admin where uId = #{uId} and uPw = #{uPw}
+		]]>
+	</select> 
+
+	<!-- 회원 목록 조회 -->
+	<select id="selectAllMem" parameterType="hashMap" resultType="hashMap">
+		<![CDATA[
+			select * from member	
+		]]>
+		
+		<if test='keyWord != null and keyWord !="" '>
+			where ${keyField} like '%${keyWord}%'
+		</if>
+		
+		<![CDATA[
+			order by num desc
+		]]>
+	</select>
+	
+	<!-- 회원 정보 조회 -->
+	<select id="memDetail" parameterType="int" resultType="hashMap">
+		<![CDATA[
+			select * from member 
+			where num = ${num}
+		]]>
+	</select>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="memUpdate" parameterType="hashMap" >
+		<![CDATA[
+			update member
+			set uName= #{uName}, uEmail= #{uEmail}, gender= #{gender}, uBirthday= #{uBirthday}, uZipcode= #{uZipcode}, uAddr = #{uAddr}, uHobby = #{uHobby}, uJob = #{uJob}
+			where num = #{num}
+		]]>
+	</update>
+	
+	<!-- 회원 삭제 -->
+	<delete id="memDelete" parameterType="int">
+		<![CDATA[
+			delete from member
+			where num = #{num}
+		]]>
+	</delete>
+	
+	<!-- 관리자 비밀번호 정보 가져오기 -->
+	<select id="adminPw" parameterType="String" resultType="String">
+		<![CDATA[
+			select uPw from admin where uId = #{uId}
+		]]>
+	</select> 
+	
+	<!-- 게시판 관리 -->
+	<!-- 게시글 삭제 -->
+	<update id="bbsDeletebyAdmin" parameterType="hashMap" >
+		<![CDATA[
+			update tblBoard 
+			set subject = "관리자의 권한으로 삭제된 글 입니다."
+			where num = #{num}
+		]]>
+	</update>
+</mapper>
